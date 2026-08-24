@@ -1,5 +1,6 @@
 import unittest
 
+from src.application.order_completion import complete_order
 from src.domain.order import Order
 from src.infrastructure.email_sender import EmailSender
 
@@ -9,7 +10,7 @@ class OrderCompletionTest(unittest.TestCase):
         order = Order(id="order-123")
         email_sender = EmailSender()
 
-        order.complete(email_sender)
+        complete_order(order, email_sender)
 
         self.assertEqual("completed", order.status)
         self.assertEqual(["order-123"], email_sender.sent_order_ids)
