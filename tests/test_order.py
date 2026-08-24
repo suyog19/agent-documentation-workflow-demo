@@ -1,15 +1,18 @@
 import unittest
 
 from src.domain.order import Order
+from src.infrastructure.email_sender import EmailSender
 
 
-class OrderTest(unittest.TestCase):
-    def test_complete_marks_order_completed(self) -> None:
+class OrderCompletionTest(unittest.TestCase):
+    def test_completing_order_sends_one_email(self) -> None:
         order = Order(id="order-123")
+        email_sender = EmailSender()
 
-        order.complete()
+        order.complete(email_sender)
 
         self.assertEqual("completed", order.status)
+        self.assertEqual(["order-123"], email_sender.sent_order_ids)
 
 
 if __name__ == "__main__":

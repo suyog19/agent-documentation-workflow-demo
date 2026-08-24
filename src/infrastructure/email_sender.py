@@ -1,6 +1,4 @@
 class EmailSender:
-    """Minimal infrastructure service used by the experiment."""
-
     def __init__(self) -> None:
         self.sent_order_ids: list[str] = []
 
