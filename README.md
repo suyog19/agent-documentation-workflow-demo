@@ -1,21 +1,26 @@
-# State 1 — The Rule Exists, but Nothing Enforces It
+# State 2 — The Same Violation Becomes Checkable
 
-This commit intentionally contains an architecture violation.
-
-The repository documents a simple rule in `docs/architecture.md`:
-
-> Code under `src/domain/` must not import code from `src/infrastructure/`.
-
-The implementation violates that rule by letting the domain object depend directly on `EmailSender`.
-
-Run the feature test:
+The implementation is intentionally unchanged from State 1, so the feature test still passes:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-It passes.
+This commit adds a deterministic architecture check:
 
-That is the point of this state: **functional tests can pass even when the implementation violates a documented engineering constraint.**
+```bash
+python scripts/check_architecture.py
+```
 
-The next commit adds a deterministic architecture check without changing the violating implementation.
+Expected result:
+
+```text
+Architecture check failed:
+  - src/domain/order.py:3 imports src.infrastructure.email_sender
+
+Rule: src/domain must not import src/infrastructure.
+```
+
+The important change is not better documentation. The documented rule is the same. The repository now has an executable mechanism that can determine whether the implementation respects that rule.
+
+The next commit fixes the implementation and wires the documentation and validation into an agent-facing workflow.
